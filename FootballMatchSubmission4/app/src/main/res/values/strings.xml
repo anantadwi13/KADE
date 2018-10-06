@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Football Match</string>
+    <string name="last_match">Last Match</string>
+    <string name="next_match">Next Match</string>
+    <string name="favorite_match">Favorite Match</string>
+    <string name="favorite">Favorite</string>
+</resources>
