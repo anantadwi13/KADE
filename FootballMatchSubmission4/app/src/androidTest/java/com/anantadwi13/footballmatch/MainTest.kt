@@ -42,6 +42,7 @@ class MainTest {
         onView(withId(R.id.nextMatch)).perform(click())
         onView(withId(R.id.recyclerview)).check(matches(isDisplayed()))
         Thread.sleep(2000)
+        onView(withText("Man United")).check(matches(isDisplayed()))
         onView(withText("Man United")).perform(click())
         Thread.sleep(1000)
         onView(withId(R.id.add_to_favorite)).perform(click())
