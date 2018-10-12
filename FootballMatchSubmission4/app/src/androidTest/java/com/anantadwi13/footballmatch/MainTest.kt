@@ -31,9 +31,9 @@ class MainTest {
         onView(withId(R.id.add_to_favorite)).perform(click())
         onView(withText("Added to favorite!")).check(matches(isDisplayed()))
         Thread.sleep(1000)
-        onView(withId(R.id.add_to_favorite)).perform(click())
+        /*onView(withId(R.id.add_to_favorite)).perform(click())
         onView(withText("Removed from favorite!")).check(matches(isDisplayed()))
-        Thread.sleep(1000)
+        Thread.sleep(1000)*/
         onView(withId(R.id.add_to_favorite)).perform(click())
         Thread.sleep(2000)
         pressBack()
