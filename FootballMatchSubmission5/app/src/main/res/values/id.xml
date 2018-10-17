@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="homeBadge"/>
+    <item type="id" name="awayBadge"/>
+    <item type="id" name="homeName"/>
+    <item type="id" name="awayName"/>
+    <item type="id" name="homeScore"/>
+    <item type="id" name="awayScore"/>
+    <item type="id" name="matchDate"/>
+    <item type="id" name="cardview"/>
+    <item type="id" name="recyclerview"/>
+    <item type="id" name="swipeRefresh"/>
+    <item type="id" name="lastMatch"/>
+    <item type="id" name="nextMatch"/>
+</resources>
