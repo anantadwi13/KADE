@@ -11,6 +11,8 @@ import com.anantadwi13.footballapps.R
 import com.anantadwi13.footballapps.model.Match
 import org.jetbrains.anko.find
 import org.jetbrains.anko.sdk25.coroutines.onClick
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MatchAdapter (val context: Context, var matches: List<Match>, val listener: (Match) -> Unit): RecyclerView.Adapter<MatchAdapter.MainViewHolder>(){
 
@@ -23,18 +25,28 @@ class MatchAdapter (val context: Context, var matches: List<Match>, val listener
         private val matchTime: TextView = itemView.find(R.id.time)
         private val cardView: CardView = itemView.find(R.id.cardview)
 
+        fun toGMTFormat(date: String, time: String): String {
+
+            val formatter = SimpleDateFormat("yy-MM-dd HH:mm:ss")
+            val datetext = SimpleDateFormat("dd-MM-yy\nHH:mm:ss")
+            formatter.timeZone = TimeZone.getTimeZone("UTC")
+            val dateTime = "$date $time"
+            return datetext.format(formatter.parse(dateTime))
+        }
+
         fun bindItem(context: Context, match: Match, listener: (Match) -> Unit){
-            val time = match.time?.split(":")
+            /*val time = match.time?.split(":")
             var timeString = ""
             if (time!=null) {
                 timeString = time[0] + ":" + time[1]
-            }
+            }*/
             homeName.text = match.homeTeam
             awayName.text = match.awayTeam
             homeScore.text = match.homeScore?.toString()
             awayScore.text = match.awayScore?.toString()
-            matchDate.text = match.date
-            matchTime.text = timeString
+            matchDate.text = toGMTFormat(match.date!!, match.time!!)
+            matchTime.visibility = View.GONE
+            //matchTime.text = timeString
             cardView.onClick {
                 listener(match)
             }

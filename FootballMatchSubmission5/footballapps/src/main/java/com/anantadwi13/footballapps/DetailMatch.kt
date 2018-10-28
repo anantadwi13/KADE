@@ -15,6 +15,9 @@ import org.jetbrains.anko.design.snackbar
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.uiThread
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.TimeZone.getTimeZone
 
 class DetailMatch : AppCompatActivity() {
     private lateinit var match: Match
@@ -30,7 +33,7 @@ class DetailMatch : AppCompatActivity() {
 
         match= intent.getParcelableExtra("dataMatch")
 
-        date?.text = match.date
+        date?.text = toGMTFormat(match.date!!, match.time!!)
         homeName?.text = match.homeTeam
         awayName?.text = match.awayTeam
         homeScore?.text = match.homeScore?.toString()
@@ -58,6 +61,15 @@ class DetailMatch : AppCompatActivity() {
         this.menu = menu
         setFavIcon(isFav())
         return true
+    }
+
+    fun toGMTFormat(date: String, time: String): String {
+
+        val formatter = SimpleDateFormat("yy-MM-dd HH:mm:ss")
+        val datetext = SimpleDateFormat("dd-MM-yy\nHH:mm:ss")
+        formatter.timeZone = getTimeZone("UTC")
+        val dateTime = "$date $time"
+        return datetext.format(formatter.parse(dateTime))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -7,13 +7,16 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
+import android.widget.ArrayAdapter
 import android.widget.SearchView
+import android.widget.Spinner
 import com.anantadwi13.footballapps.DetailMatch
 import com.anantadwi13.footballapps.R
 import com.anantadwi13.footballapps.api.API
 import com.anantadwi13.footballapps.model.Match
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.sdk25.coroutines.onClose
+import org.jetbrains.anko.sdk25.coroutines.onItemSelectedListener
 import org.jetbrains.anko.sdk25.coroutines.onQueryTextListener
 import org.jetbrains.anko.sdk25.coroutines.onSearchClick
 import org.jetbrains.anko.support.v4.*
@@ -23,6 +26,8 @@ class FragmentMatch:Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var tabLayout: TabLayout
     private lateinit var adapter: MatchAdapter
+    private lateinit var spinner: Spinner
+    private var leagueID: Int = 4328
     private var searchView:SearchView?=null
     private var TAB_POS = 0
     val REQUEST_CODE = 100
@@ -36,11 +41,17 @@ class FragmentMatch:Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         val list: MutableList<Match> = mutableListOf()
+        spinner = find(R.id.spinner)
         tabLayout = find(R.id.tabLayout)
         swipeRefreshLayout = find(R.id.swiperefresh)
         adapter = MatchAdapter(ctx,list){
             startActivityForResult(intentFor<DetailMatch>("dataMatch" to it),REQUEST_CODE)
         }
+
+        val spinnerItems = resources.getStringArray(R.array.league)
+        val spinnerItemsID = resources.getIntArray(R.array.league_id)
+        val spinnerAdapter = ArrayAdapter(ctx,android.R.layout.simple_spinner_dropdown_item,spinnerItems)
+        spinner.adapter = spinnerAdapter
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
             override fun onTabReselected(p0: TabLayout.Tab) {
@@ -62,10 +73,17 @@ class FragmentMatch:Fragment() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
 
+
+        spinner.onItemSelectedListener {
+            onItemSelected { adapterView, view, i, l ->
+                leagueID = spinnerItemsID[i]
+                getMatchList()
+            }
+        }
+
         swipeRefreshLayout.onRefresh {
             getMatchList()
         }
-        getMatchList()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -116,9 +134,9 @@ class FragmentMatch:Fragment() {
         doAsync {
             val matches: List<Match>
             if (TAB_POS==0)
-                matches = API().getNextMatches(4328)
+                matches = API().getNextMatches(leagueID)
             else
-                matches = API().getLastMatches(4328)
+                matches = API().getLastMatches(leagueID)
             onUiThread {
                 showMatchList(matches)
                 hideLoading()
